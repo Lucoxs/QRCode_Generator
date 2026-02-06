@@ -1,0 +1,47 @@
+﻿@page "/qrcode"
+@inherits Generator_QRCodeBase
+@using Models/Mapping
+
+<h3>QRCode</h3>
+
+<input @bind="InputText" placeholder="Entrez le texte pour générer un QR Code" />
+
+<button @onclick="GenerateQRCode">Générer le QR Code</button>
+
+<div>
+    @if (Image != null)
+    {
+        <h4>QR Code généré :</h4>
+        <img src="@Image" alt="QR Code" />
+    }
+</div>
+
+<div>
+    <p>Grid</p>
+    <Grid TItem="Mapping"
+        Class="table table-hover table-bordered table-striped mt-3"
+        AllowDetailView="true"
+        AllowRowClick="true"
+        OnRowClick="OnRowClick"
+        Data="Mappings">
+        <GridColumns>
+            <GridColumn TItem="Mapping" HeaderText="Nom" PropertyName="Name">
+                <InputText Value="@context.Name" ValueExpression="() => context.Name" Class="form-control-plaintext"></InputText>
+            </GridColumn>
+            <GridColumn TItem="Mapping" HeaderText="Url du QRCode" PropertyName="DomainUrl">
+                @context.DomainUrl
+            </GridColumn>
+            <GridColumn TItem="Mapping" HeaderText="Url de redirection" PropertyName="RedirectionUrl">
+                <InputText Value="@context.RedirectionUrl" ValueExpression="() => context.RedirectionUrl" Class="form-control-plaintext"></InputText>
+            </GridColumn>
+            <GridColumn TItem="Mapping" HeaderText="Activer" PropertyName="IsActivate"  TextAlignment="Alignment.Center">
+                <Switch @bind-Value="context.IsActivate" />
+            </GridColumn>
+        </GridColumns>
+
+        <GridDetailView TItem="Mapping">
+            @* @LoadQrCode(context) *@
+            <Image Src="@context.ImageBase64" Alt="@context.DomainUrl" />
+        </GridDetailView>
+    </Grid>
+</div>
